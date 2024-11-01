@@ -10,12 +10,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func printValues(file File, wg *sync.WaitGroup) {
+func printValues(XmlFile XmlFile, wg *sync.WaitGroup) {
 	defer wg.Done()
+
+	fmt.Printf("%+v\n", XmlFile)
 
 	f := &lutetiumgo.Sitemap{
 		lutetiumgo.Xml{
-			Location: file.path,
+			Location: XmlFile.File,
 		},
 	}
 
@@ -50,8 +52,8 @@ func main() {
 
 	wg.Add(len(files))
 
-	for _, f := range files {
-		go printValues(f, &wg)
+	for _, XmlFile := range files {
+		go printValues(XmlFile, &wg)
 	}
 
 	wg.Wait()
