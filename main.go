@@ -101,7 +101,24 @@ func getConf() interface{} {
 
 func main() {
 	conf := getConf()
-	files := getAllFiles(conf)
+
+	db, err := DatabaseConnect(conf.(map[string]interface{})["parameters"].(map[interface{}]interface{})["postgres_connection_string"].(string))
+	if err != nil {
+		panic("cant DatabaseConnect with db")
+	}
+
+	if len(os.Args) > 1 {
+		if os.Args[1] == "-h" || os.Args[1] == "--help" {
+			fmt.Println("-m --migrate-db - To Execute AutoMigrate Database")
+		}
+		if os.Args[1] == "-m" || os.Args[1] == "--migrate-db" {
+			DatabaseMigrate(db)
+		}
+
+		os.Exit(0)
+	}
+
+	files := getAllFiles(db, conf)
 
 	var wg sync.WaitGroup
 
