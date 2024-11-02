@@ -1,11 +1,11 @@
 module github.com/diogorodriguesc/app-go
 
-go 1.22
+go 1.23
 
 toolchain go1.23.2
 
 require (
-	github.com/diogorodriguesc/lutetium-go v1.0.0
+	github.com/diogorodriguesc/lutetium-go v0.1.0
 	github.com/lib/pq v1.10.9
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.5.9
