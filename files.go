@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func getAllFiles(db *gorm.DB, conf interface{}) []XmlFile {
+func GetActiveFiles(db *gorm.DB) []XmlFile {
 	var XmlFiles []XmlFile
 
 	db.Find(&XmlFiles, "active = ?", true)

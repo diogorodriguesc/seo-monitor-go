@@ -69,28 +69,28 @@ func ProcessXmlFile(XmlFile XmlFile, wg *sync.WaitGroup) {
 
 	for _, c := range UrlSet.Urls {
 		requestUrl := fmt.Sprintf(c.Loc)
-		res, err := http.Get(requestUrl)
 
+		res, err := http.Get(requestUrl)
 		if err != nil {
 			fmt.Println(err)
 		}
-
 		defer res.Body.Close()
 
 		robotsContent := GetMetaRobotsContent(res)
 
-		fmt.Printf("url: %s client: status code: %d robots: %s\n", c.Loc, res.StatusCode, robotsContent)
+		fmt.Printf("URL: %s Status Code: %d Meta Robots: %s\n", c.Loc, res.StatusCode, robotsContent)
 	}
 }
 
-func getConf() interface{} {
-
+func GetParameters() interface{} {
 	obj := make(map[string]interface{})
 
 	yamlFile, err := os.ReadFile("parameters.yaml")
 	if err != nil {
+
 		fmt.Printf("yamlFile.Get err #%v ", err)
 	}
+
 	err = yaml.Unmarshal(yamlFile, obj)
 	if err != nil {
 		fmt.Printf("Unmarshal: %v", err)
@@ -100,9 +100,9 @@ func getConf() interface{} {
 }
 
 func main() {
-	conf := getConf()
+	parameters := GetParameters()
 
-	db, err := DatabaseConnect(conf.(map[string]interface{})["parameters"].(map[interface{}]interface{})["postgres_connection_string"].(string))
+	db, err := DatabaseConnect(parameters.(map[string]interface{})["parameters"].(map[interface{}]interface{})["postgres_connection_string"].(string))
 	if err != nil {
 		panic("cant DatabaseConnect with db")
 	}
@@ -118,13 +118,13 @@ func main() {
 		os.Exit(0)
 	}
 
-	files := getAllFiles(db, conf)
+	activeFiles := GetActiveFiles(db)
 
 	var wg sync.WaitGroup
 
-	wg.Add(len(files))
+	wg.Add(len(activeFiles))
 
-	for _, XmlFile := range files {
+	for _, XmlFile := range activeFiles {
 		go ProcessXmlFile(XmlFile, &wg)
 	}
 
