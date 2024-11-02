@@ -1,2 +1,2 @@
 parameters:
-  postgres_connection_string: "user=root dbname=app password=root sslmode=disable port=6543"
+  postgres_connection_string: "host=0.0.0.0 user=root dbname=app password=root sslmode=disable port=6543"
